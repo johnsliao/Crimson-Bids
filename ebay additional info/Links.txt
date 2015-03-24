@@ -1,0 +1,4 @@
+Useful Links:
+
+Get information for single item (description, etc)
+http://developer.ebay.com/devzone/shopping/docs/callref/GetSingleItem.html

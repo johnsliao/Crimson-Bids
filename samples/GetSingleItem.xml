@@ -1,0 +1,60 @@
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<GetSingleItemResponse xmlns="urn:ebay:apis:eBLBaseComponents">
+<Timestamp>2015-03-20T16:17:08.398Z</Timestamp>
+<Ack>Success</Ack>
+<Build>E897_CORE_APILW_17290128_R1</Build>
+<Version>897</Version>
+<Item>
+<Description>
+iPhone 5s 32 gb space gray in near mint condition and perfect working condition. Used for about a year and factory unlocked. Light scratches on the front from daily use and no scratches at all on the sides and back. Was always used in a case. Includes original box and accessories. Comes with HK/UK charger head but can include instead a US charger head if desired. Buyers with 0 feedback please email me before bidding or I will cancel your bid.
+</Description>
+<ItemID>131457056861</ItemID>
+<EndTime>2015-03-20T15:42:35.000Z</EndTime>
+<ViewItemURLForNaturalSearch>
+http://www.ebay.com/itm/Apple-iPhone-5s-32GB-Space-Gray-Factory-Unlocked-Smartphone-/131457056861
+</ViewItemURLForNaturalSearch>
+<ListingType>Chinese</ListingType>
+<Location>Kowloon</Location>
+<GalleryURL>
+http://thumbs2.ebaystatic.com/pict/1314570568618080_1.jpg
+</GalleryURL>
+<PictureURL>
+http://i.ebayimg.com/00/s/MTIwMFgxNjAw/z/BOEAAOSwBLlU6qVh/$_1.JPG?set_id=880000500F
+</PictureURL>
+<PrimaryCategoryID>9355</PrimaryCategoryID>
+<PrimaryCategoryName>
+Cell Phones & Accessories:Cell Phones & Smartphones
+</PrimaryCategoryName>
+<BidCount>9</BidCount>
+<ConvertedCurrentPrice currencyID="USD">405.0</ConvertedCurrentPrice>
+<ListingStatus>Completed</ListingStatus>
+<TimeLeft>PT0S</TimeLeft>
+<Title>
+Apple iPhone 5s - 32GB - Space Gray (Factory Unlocked) Smartphone
+</Title>
+<ItemSpecifics>
+<NameValueList>
+<Name>All returns accepted</Name>
+<Value>ReturnsNotAccepted</Value>
+</NameValueList>
+<NameValueList>
+<Name>Brand</Name>
+<Value>Apple</Value>
+</NameValueList>
+<NameValueList>
+<Name>Model</Name>
+<Value>iPhone 5s</Value>
+</NameValueList>
+<NameValueList>
+<Name>Storage Capacity</Name>
+<Value>32GB</Value>
+</NameValueList>
+<NameValueList>
+<Name>Color</Name>
+<Value>Gray</Value>
+</NameValueList>
+</ItemSpecifics>
+<Country>HK</Country>
+<AutoPay>true</AutoPay>
+</Item>
+</GetSingleItemResponse>
