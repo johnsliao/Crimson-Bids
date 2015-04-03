@@ -1,18 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import sys
-import os
 import requests
-
-from subprocess import call
 from construct_url import Construct_URL
 from lxml import etree, html
 from dictionaries_lookup import iPhone
 from inventory import Inventory
+from boto.dynamodb2.table import Table
+from boto.dynamodb2.items import Item
 
-SEARCH_MODE = 'LIVE'
-
-#SEARCH_MODE = 'XML'
 
 class Query:
 
@@ -31,36 +26,14 @@ class Query:
             'BROKE',
         ]
         self.viable_products = []
-        self.temp = [
-            'title',
-            'itemId',
-            'viewItemURL',
-            'sellerUserName',
-            'positiveFeedbackPercent',
-            'feedbackRatingStar',
-            'conditionId',
-            'listingType',
-            'currentPrice',
-            'bidCount',
-            'days',
-            'hours',
-            'mins',
-            'sec',
-        ]
 
-    def parse_listing(self, path):
-        global SEARCH_MODE
-
-        if SEARCH_MODE == 'XML':
-            dom = etree.parse(path)
-            root = dom.getroot()
-        if SEARCH_MODE == 'LIVE':
-            u = Construct_URL()
-            url = u.iPhone_listings(1)
-            xml = requests.get(url)
-            formatted_xml = xml.text.replace("<?xml version='1.0' encoding='UTF-8'?>",'')
-            formatted_xml = formatted_xml.replace(' xmlns="http://www.ebay.com/marketplace/search/v1/services"', '')
-            root = etree.fromstring(formatted_xml)
+    def parse_listing(self):
+        u = Construct_URL()
+        url = u.iPhone_listings(1)
+        xml = requests.get(url)
+        formatted_xml = xml.text.replace("<?xml version='1.0' encoding='UTF-8'?>",'')
+        formatted_xml = formatted_xml.replace(' xmlns="http://www.ebay.com/marketplace/search/v1/services"', '')
+        root = etree.fromstring(formatted_xml)
 
         searchResults = root.find('searchResult')
         items = searchResults
@@ -263,52 +236,32 @@ class Query:
 
         return time
 
-
-    def export_viable_productsXML(self):
-        fname = './Viable_products.xml'
-
-        columns = [
-            'title',
-            'itemId',
-            'viewItemURL',
-            'sellerUserName',
-            'positiveFeedbackPercent',
-            'feedbackRatingStar',
-            'conditionId',
-            'listingType',
-            'currentPrice',
-            'bidCount',
-            'timeLeft',
-            'carrier',
-            'storage',
-            'model',
-            'color'
-        ]
-
-        root = etree.Element("root")
-        item = []
-
-        itemCount = 0
-        count = 0
+    def add_to_db(self):
+        items_table = Table('items')
 
         for product in self.viable_products:
-            #print product
-            item.append(etree.SubElement(root, "item"))
-            count = 0
-            for p in product:
-                entry = ''
-                entry = etree.SubElement(item[itemCount], columns[count])
-                entry.text = str(p)
-                print 'set entry.text equal to', entry.text
-                count += 1
-            itemCount += 1
+            temp_item = Item(items_table, data={
+                'type':'iphone',
+                'viewItemURL':product[2],
+                'title':product[0],
+                'itemId':product[1],
+                'sellerUserName':product[3],
+                'positiveFeedbackPercent':product[4],
+                'feedbackRatingStar':product[5],
+                'conditionId':product[6],
+                'listingType':product[7],
+                'currentPrice':product[8],
+                'bidCount':product[9],
+                'timeLeft':product[10],
+                'carrier':product[11],
+                'storage':product[12],
+                'model':product[13],
+                'color':product[14],
+            })
 
-        et = etree.ElementTree(root)
+            temp_item.save(overwrite=True)
 
-        print 'write to products.xml'
-        et.write('./productsXML.xml')
-        print "all set!"
-
+        print 'all set'
 
     def get_title(self, item):
         title = item.find('title')
@@ -359,6 +312,7 @@ class Query:
             return Description.text.split()
 
 
+
 def save_product_xml(tree):
     print 'SAVING PRODUCT XML NOW!\n'
     item = tree.find('Item')
@@ -372,45 +326,23 @@ def save_product_xml(tree):
 
 
 if __name__ == '__main__':
-    if SEARCH_MODE == 'XML':
-        if not len(sys.argv) == 3:
-            print 'Usage', sys.argv[0], '[PRODUCT LISITINGS] [EBAY LISTINGS]'
-            sys.exit(0)
 
-        path1 = sys.argv[1]
-        path2 = sys.argv[2]
-
-        if not os.path.exists(path1) or not os.path.exists(path2):
-            print 'Could not find', path1, path2
-            sys.exit(0)
-
-    if SEARCH_MODE == 'LIVE':
-        path1 = r'./product_list.txt'
-        path2 = ''
-
-        if not os.path.exists(path1):
-            print 'Could not find', path1
-            sys.exit(0)
+    path1 = r'./product_list.txt'
 
     print 'Create inventory object'
-
     inventory = Inventory()
 
     print 'Create iPhone dictionary'
-
     iPhone_dict = iPhone()
 
     print 'Populate product listings'
-
     inventory.import_product_list(path1)
 
     print 'Parse eBay xml'
-
     q = Query()
-    items = q.parse_listing(path2)
+    items = q.parse_listing()
 
     print 'Add to inventory'
-
     (identified, reject, total, unidentified, auctions) = (0, 0, 0, 0,0)
     DNE_attributes = ['CARRIER-DNE', 'STORAGE-DNE', 'MODEL-DNE','COLOR-DNE']
 
@@ -461,9 +393,6 @@ if __name__ == '__main__':
         more_info = q.get_product_information(item)
         inventory.add_inventory(product_id)
 
-        print 'appended more_info: ', more_info
-        print 'append title: ', title
-
         all_info = more_info + title
 
         q.viable_products.append(all_info)
@@ -478,10 +407,7 @@ if __name__ == '__main__':
 
     print "*****FINISHED WITH EBAY API******\n\n\n"
 
-
-    print 'Save xml to directory\n'
-    q.export_viable_productsXML()
-
-
+    print 'add products to dynamoDB'
+    q.add_to_db()
 
     print "finished"
