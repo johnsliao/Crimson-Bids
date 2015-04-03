@@ -8,7 +8,7 @@ class iPhone:
 
         self.storage = ['4GB', '8GB', '16GB','32GB','64GB','128GB']
 
-        self.model = ['4S', '4', '5C', '5S', '5', '6PLUS', 'PLUS', '6']
+        self.model = ['4S', '4', '5C', '5S', '5', '6PLUS', '6']
         self.unsupported_models = ['1', '3', '3G']
 
         self.color = ['SILVER','BLACK','SLATE','WHITE','SPACE','GOLD','BLUE','WHITE',

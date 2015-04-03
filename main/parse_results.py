@@ -4,6 +4,7 @@ import sys
 import os
 import requests
 
+from subprocess import call
 from construct_url import Construct_URL
 from lxml import etree, html
 from dictionaries_lookup import iPhone
@@ -12,7 +13,6 @@ from inventory import Inventory
 SEARCH_MODE = 'LIVE'
 
 #SEARCH_MODE = 'XML'
-
 
 class Query:
 
@@ -30,7 +30,8 @@ class Query:
             'DROP',
             'BROKE',
         ]
-        self.viable_products = [
+        self.viable_products = []
+        self.temp = [
             'title',
             'itemId',
             'viewItemURL',
@@ -80,7 +81,7 @@ class Query:
 
     def search_NameValueList(self, item, missing_attribute):
         itemId = self.get_itemId(item)
-        path = r'/users/johnliao/temp/' + itemId + '.xml'
+        path = r'./productxml/' + itemId + '.xml'
         dom = etree.parse(path)
         root = dom.getroot()
 
@@ -121,6 +122,7 @@ class Query:
         # sellerInfo
 
         sellerInfo = item.find('sellerInfo')
+        sellerRating = sellerInfo.find('sellerRating')
         sellerUserName = sellerInfo.find('sellerUserName')
         positiveFeedbackPercent = sellerInfo.find('positiveFeedbackPercent')
         feedbackRatingStar = sellerInfo.find('feedbackRatingStar')
@@ -232,7 +234,10 @@ class Query:
                         print 'Reject! SellerNotes screenout keyword activated:', word
                         return False
 
+        print self.get_description(item)
+
         for word in self.get_description(item):
+            print word
             for screenout_keyword in self.screenout_keywords:
 
                     # print 'comparing ', word.upper(),'TO', screenout_keyword
@@ -258,25 +263,52 @@ class Query:
 
         return time
 
-    def export_viable_products(self):
-        fname = '/users/johnliao/temp/Viable_products.csv'
 
-        # fname = r'C:/Temp/Viable_products.csv'
+    def export_viable_productsXML(self):
+        fname = './Viable_products.xml'
 
-        with open(fname, 'w') as fs:
-            for product in self.viable_products:
+        columns = [
+            'title',
+            'itemId',
+            'viewItemURL',
+            'sellerUserName',
+            'positiveFeedbackPercent',
+            'feedbackRatingStar',
+            'conditionId',
+            'listingType',
+            'currentPrice',
+            'bidCount',
+            'timeLeft',
+            'carrier',
+            'storage',
+            'model',
+            'color'
+        ]
 
-                # print 'product, ',product
+        root = etree.Element("root")
+        item = []
 
-                text = ''
-                for attribute in product:
+        itemCount = 0
+        count = 0
 
-                    # print text
+        for product in self.viable_products:
+            #print product
+            item.append(etree.SubElement(root, "item"))
+            count = 0
+            for p in product:
+                entry = ''
+                entry = etree.SubElement(item[itemCount], columns[count])
+                entry.text = str(p)
+                print 'set entry.text equal to', entry.text
+                count += 1
+            itemCount += 1
 
-                    text += str(attribute).replace('\n', '')
-                    text += ','
-                text += '\n'
-                fs.write(text)
+        et = etree.ElementTree(root)
+
+        print 'write to products.xml'
+        et.write('./productsXML.xml')
+        print "all set!"
+
 
     def get_title(self, item):
         title = item.find('title')
@@ -312,25 +344,26 @@ class Query:
 
     def get_description(self, item):  # for specific product
         itemId = self.get_itemId(item)
-        path = r'/users/johnliao/temp/' + itemId + '.xml'
+        path = r'./productxml/' + itemId + '.xml'
         dom = etree.parse(path)
         root = dom.getroot()
 
         item = root.find('Item')
         Description = item.find('Description')
 
-        if not Description == None:
-            return Description.text.split()
+        if Description is None:
+            return ('DNE')
 
-        return (-1)
+        if Description is not None:
+            print 'ENTERED DESCRIPTION', Description.text
+            return Description.text.split()
 
 
 def save_product_xml(tree):
+    print 'SAVING PRODUCT XML NOW!\n'
     item = tree.find('Item')
     itemId = item.find('ItemID')
-    fname = r'/users/johnliao/temp/' + itemId.text + '.xml'
-
-    # fname = r'C:/Temp/Viable_products.csv'
+    fname = r'./productxml/' + itemId.text + '.xml'
 
     xml = etree.tostring(tree, pretty_print=True)
     with open(fname, 'w') as fs:
@@ -352,35 +385,31 @@ if __name__ == '__main__':
             sys.exit(0)
 
     if SEARCH_MODE == 'LIVE':
-        if not len(sys.argv) == 2:
-            print 'Usage', sys.argv[0], '[PRODUCT LISITINGS]'
-            sys.exit(0)
-
-        path1 = sys.argv[1]
+        path1 = r'./product_list.txt'
         path2 = ''
 
         if not os.path.exists(path1):
             print 'Could not find', path1
             sys.exit(0)
 
-    # Create inventory object
+    print 'Create inventory object'
 
     inventory = Inventory()
 
-    # Create iPhone dictionary
+    print 'Create iPhone dictionary'
 
     iPhone_dict = iPhone()
 
-    # Populate product listings
+    print 'Populate product listings'
 
     inventory.import_product_list(path1)
 
-    # Parse eBay xml
+    print 'Parse eBay xml'
 
     q = Query()
     items = q.parse_listing(path2)
 
-    # Add to inventory
+    print 'Add to inventory'
 
     (identified, reject, total, unidentified, auctions) = (0, 0, 0, 0,0)
     DNE_attributes = ['CARRIER-DNE', 'STORAGE-DNE', 'MODEL-DNE','COLOR-DNE']
@@ -409,7 +438,7 @@ if __name__ == '__main__':
             reject += 1
             continue
 
-        # read description if product is used
+        print 'read description if product is used'
         if int(q.get_conditionId(item)) == 3000:
             q.parse_single_product(item)
             if q.check_description_quality(item) == False:
@@ -432,7 +461,12 @@ if __name__ == '__main__':
         more_info = q.get_product_information(item)
         inventory.add_inventory(product_id)
 
-        q.viable_products.append(more_info)
+        print 'appended more_info: ', more_info
+        print 'append title: ', title
+
+        all_info = more_info + title
+
+        q.viable_products.append(all_info)
 
     print '# Total items:', total
     print '# products identified and put into Inventory:', identified
@@ -442,8 +476,12 @@ if __name__ == '__main__':
     print 'Total viable products [%]:', float(identified) / float(total) * 100, '%'
     print '# auctions:', auctions
 
-    # Save xml to directory
+    print "*****FINISHED WITH EBAY API******\n\n\n"
 
-    q.export_viable_products()
 
-    # inventory.export_inventory()
+    print 'Save xml to directory\n'
+    q.export_viable_productsXML()
+
+
+
+    print "finished"

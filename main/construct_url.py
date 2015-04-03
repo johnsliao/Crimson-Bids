@@ -1,6 +1,7 @@
 from lxml import etree
 import requests
 
+
 class Construct_URL():
     def __init__(self):
         self.MY_APP_ID = 'JohnLiao-6d7a-4b66-bd6a-036722db6f28'
