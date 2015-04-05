@@ -8,7 +8,6 @@ from inventory import Inventory
 from boto.dynamodb2.table import Table
 from boto.dynamodb2.items import Item
 
-
 class Query:
 
     def __init__(self):
@@ -31,6 +30,7 @@ class Query:
         u = Construct_URL()
         url = u.iPhone_listings(1)
         xml = requests.get(url)
+
         formatted_xml = xml.text.replace("<?xml version='1.0' encoding='UTF-8'?>",'')
         formatted_xml = formatted_xml.replace(' xmlns="http://www.ebay.com/marketplace/search/v1/services"', '')
         root = etree.fromstring(formatted_xml)
@@ -65,37 +65,25 @@ class Query:
         for NameValue in NameValueList:
             Name = NameValue.find('Name')
 
-            # print 'Currently comparing:', Name.text, 'to', missing_attribute
-
             if Name.text == missing_attribute:
                 Value = NameValue.find('Value')
-
-                # print 'Found deeper listing!', Value.text
-
                 return Value.text
-
-        # print 'Did not find anything :('
 
         return missing_attribute
 
     def get_product_information(self, item):  # get info for viable product
 
         # title
-
         title = item.find('title')
 
         # itemId
-
         itemId = item.find('itemId')
 
         # itemURL
-
         viewItemURL = item.find('viewItemURL')
 
         # sellerInfo
-
         sellerInfo = item.find('sellerInfo')
-        sellerRating = sellerInfo.find('sellerRating')
         sellerUserName = sellerInfo.find('sellerUserName')
         positiveFeedbackPercent = sellerInfo.find('positiveFeedbackPercent')
         feedbackRatingStar = sellerInfo.find('feedbackRatingStar')
@@ -105,10 +93,12 @@ class Query:
         condition = item.find('condition')
         conditionId = condition.find('conditionId')
 
+
         # listingInfo
 
         listingInfo = item.find('listingInfo')
         listingType = listingInfo.find('listingType')
+        endTime = listingInfo.find('endTime')
 
         # sellingStatus
 
@@ -123,6 +113,8 @@ class Query:
         else:
             bidCount = bidCount.text
 
+        print 'Endtime is ', endTime.text
+
         return [
             title.text.replace(',', ''),
             itemId.text,
@@ -135,6 +127,7 @@ class Query:
             currentPrice.text,
             bidCount,
             timeLeft,
+            endTime.text
         ]
 
     def check_quality(self, item):
@@ -144,30 +137,15 @@ class Query:
         title = item.find('title')
 
         # sellerInfo
-
         sellerInfo = item.find('sellerInfo')
-        sellerUserName = sellerInfo.find('sellerUserName')
         positiveFeedbackPercent = sellerInfo.find('positiveFeedbackPercent')
         feedbackRatingStar = sellerInfo.find('feedbackRatingStar')
 
         # condition
-
         condition = item.find('condition')
         conditionId = condition.find('conditionId')
 
-        # listingInfo
-
-        listingInfo = item.find('listingInfo')
-        listingtype = listingInfo.find('listingType')
-
-        # sellingStatus
-
-        sellingStatus = item.find('sellingStatus')
-        currentPrice = sellingStatus.find('currentPrice')
-        timeLeft = sellingStatus.find('timeLeft')
-
         # Quality Requirements
-
         if float(positiveFeedbackPercent.text) < 95:
             print 'Reject!', positiveFeedbackPercent.text
             return False
@@ -185,10 +163,7 @@ class Query:
 
         return True
 
-    def check_description_quality(self, item):
-
-        # go to specific listing and check sellerNotes via scraper
-
+    def check_description_quality(self, item): # go to specific listing and check sellerNotes via scraper
         url = self.get_itemURL(item)
         url = url.replace('\n', '')
         page = requests.get(url)
@@ -253,10 +228,11 @@ class Query:
                 'currentPrice':product[8],
                 'bidCount':product[9],
                 'timeLeft':product[10],
-                'carrier':product[11],
-                'storage':product[12],
-                'model':product[13],
-                'color':product[14],
+                'endTime':product[11],
+                'carrier':product[12],
+                'storage':product[13],
+                'model':product[14],
+                'color':product[15],
             })
 
             temp_item.save(overwrite=True)
@@ -265,25 +241,17 @@ class Query:
 
     def get_title(self, item):
         title = item.find('title')
-
         return title.text
 
     def get_itemId(self, item):
         itemId = item.find('itemId')
-
         return itemId.text
 
     def get_itemURL(self, item):
-
-        # itemURL
-
         viewItemURL = item.find('viewItemURL')
         return viewItemURL.text
 
     def get_conditionId(self, item):
-
-        # condition
-
         condition = item.find('condition')
         conditionId = condition.find('conditionId')
 
@@ -326,7 +294,6 @@ def save_product_xml(tree):
 
 
 if __name__ == '__main__':
-
     path1 = r'./product_list.txt'
 
     print 'Create inventory object'
@@ -352,6 +319,9 @@ if __name__ == '__main__':
         title = iPhone_dict.check_title_attributes(rtitle)
         print '''----------- '''
         print 'Currently analyzing...', rtitle
+
+        if item is None:
+            continue
 
         for word in enumerate(title):  # refined check using GetSingleItem()
             if any(attribute in word[1] for attribute in DNE_attributes):
