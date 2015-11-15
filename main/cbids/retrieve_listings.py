@@ -10,7 +10,8 @@ tree = html.fromstring(page.text)
 sellerNotes = tree.xpath('//span[@class="viSNotesCnt"]/text()')
 
 print sellerNotes
-sellerNotes = sellerNotes.split()
+sellerNotes = sellerNotes
+print sellerNotes[0]
 
 for word in sellerNotes:
     for screenout_keyword in screenout_keywords:

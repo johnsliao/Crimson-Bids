@@ -1,0 +1,106 @@
+body {
+	background-color: #FDFDFD;
+}
+
+.list {
+  font-family:sans-serif;
+  margin:0;
+  padding:20px 0 0;
+}
+.list > li  {
+  //background-color: #E6E6E6;
+  padding:3px;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+
+.table {
+  display:block;
+  background-color: #E6E6E6;
+  padding:2px;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.listColumnHeader {
+    display: inline-block;
+    vertical-align: top;
+    width: 95px;
+    margin-right: 20px;
+  font-family: 'Times New Roman';
+}
+
+.itemId, .conditionId, .color, .title, .carrier, .storage, .currentPrice, .timeLeft, .bids, .listingType, .endTime, .model, .viewItemURL {
+    display: inline-block;
+    vertical-align: top;
+    width: 95px;
+    margin-right: 20px;
+	font-family: 'Times New Roman';
+}
+
+.avatar {
+  max-width: 150px;
+}
+img {
+  max-width: 100%;
+}
+h3 {
+  font-size: 16px;
+  margin:0 0 0.3rem;
+  font-weight: normal;
+  font-weight:bold;
+}
+p {
+  margin:0;
+}
+
+input {
+  border:solid 1px #ccc;
+  border-radius: 5px;
+  padding:7px 14px;
+  margin-bottom:10px
+}
+input:focus {
+  outline:none;
+  border-color:#aaa;
+}
+
+.sort:hover {
+  text-decoration: none;
+  background-color:#1b8aba;
+}
+.sort:focus {
+  outline:none;
+}
+.sort:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content:"";
+  position: relative;
+  top:-10px;
+  right:-5px;
+}
+.sort.asc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+  content:"";
+  position: relative;
+  top:13px;
+  right:-5px;
+}
+.sort.desc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #fff;
+  content:"";
+  position: relative;
+  top:-10px;
+  right:-5px;
+}

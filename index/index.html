@@ -1,446 +1,270 @@
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../favicon.ico">
+<html>
 
-    <title>Theme Template for Bootstrap</title>
+<head>
+    <meta charset=utf-8 />
 
     <!-- Bootstrap core CSS -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="./css/bootstrap-theme.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
+    <link href="./Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./Bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="theme.css" rel="stylesheet">
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body role="document">
-
-
-	<div class="container theme-showcase" role="main">
-
-	<div class="page-header">
-		<h1>Company LLC</h1>
-	</div>
-	<div id="intro" class="well">
-		<p>Testing</p>
-	</div>
-
-	<button id="daButton" type="button" onclick="getStarted()" class="btn btn-lg btn-default">Let's get started!</button>
-	<!-- iPhone Models -->
-
-	<div id="modelList hidden" class="row hidden">
-	<div class="col-sm-4">
-	  <div class="list-group">
-	    <a href='#' id="4" class="list-group-item">iPhone 4</a>
-	    <a href='#' id="4s" class="list-group-item">iPhone 4S</a>
-	    <a href='#' id="5" class="list-group-item">iPhone 5</a>
-	    <a href='#' id="5c" class="list-group-item">iPhone 5C</a>
-	    <a href='#' id="5s" class="list-group-item">iPhone 5S</a>
-	    <a href='#' id="6" class="list-group-item">iPhone 6</a>
-	    <a href='#' id="6plus" class="list-group-item">iPhone 6+</a>
-	  </div>
-	</div>
-	</div> 
-
-	<!-- iPhone Carrier -->
-
-	<div id="carrierList hidden" class="row hidden">
-	<div class="col-sm-4">
-	  <div class="list-group">
-	    <a href='#' id="sprint" class="list-group-item">Sprint</a>
-	    <a href='#' id="tmobile" class="list-group-item">T-Mobile</a>
-	    <a href='#' id="verizon" class="list-group-item">Verizon</a>
-	    <a href='#' id="att" class="list-group-item">AT&amp;T</a>
-	    <a href='#' id="unlocked" class="list-group-item">Unlocked</a>
-	  </div>
-	</div>
-	</div> 
-
-	<!-- iPhone Storage Size -->
-
-
-	<div id="storageList hidden" class="row hidden">
-	<div class="col-sm-4">
-	  <div class="list-group">
-	  	<a href='#' id="8gb" class="list-group-item hidden">8GB</a>
-	    <a href='#' id="16gb" class="list-group-item hidden">16GB</a>
-	    <a href='#' id="32gb" class="list-group-item hidden">32GB</a>
-	    <a href='#' id="64gb" class="list-group-item hidden">64GB</a>
-	    <a href='#' id="128gb" class="list-group-item hidden">128GB</a>
-	  </div>
-	</div>
-	</div> 
-
-	<!-- iPhone Color -->
-
-	<div id="colorList hidden" class="row hidden">
-	<div class="col-sm-4">
-	  <div class="list-group">
-	    <a href='#' id="BLACK" class="list-group-item hidden">Black</a>
-	    <a href='#' id="WHITE" class="list-group-item hidden">White</a>
-	    <a href='#' id="SLATE" class="list-group-item hidden">Slate</a>
-	    <a href='#' id="PINK" class="list-group-item hidden">Pink</a>
-	   	<a href='#' id="YELLOW" class="list-group-item hidden">Yellow</a>
-	    <a href='#' id="BLUE" class="list-group-item hidden">Blue</a>
-	    <a href='#' id="RED" class="list-group-item hidden">Red</a>
-	    <a href='#' id="GRAY" class="list-group-item hidden">Gray</a>
-	    <a href='#' id="SILVER" class="list-group-item hidden">Silver</a>
-	    <a href='#' id="SPACE" class="list-group-item hidden">Space</a>
-	   	<a href='#' id="GOLD" class="list-group-item hidden">Gold</a>
-	   	<a href='#' id="GREEN" class="list-group-item hidden">Green</a>
-	  </div>
-	</div>
-	</div> 
-
-	<form action="./cgi-bin/queryDB.py" method="get">
-		user picks model:
-		<input id="model" type="text" name="model"><br>
-		user picks carrier:
-		<input id="carrier" type="text" name="carrier"><br>
-		user picks storage:
-		<input id="storage" type="text" name="storage"><br>
-		user picks color:
-		<input id="color" type="text" name="color"><br>
-		<p>
-		<input type="submit">
-	</form>
-
-
-	<script>
-
-
-	var list_num = 0;
-	var list_status = ["modelList hidden","carrierList hidden", "storageList hidden", "colorList hidden", "colorList hidden", "null"];
-
-	var usr_model = "null";
-	var usr_carrier = "null";
-	var usr_storage = "null";
-	var usr_color = "null";
-
-	// --------- Models
-
-	document.getElementById("4").addEventListener("click", function() {
-	usr_model = "4";
-	highlightList("4", "list-group-item");
-	checkSizes("4");
-	checkColors("4");
-	}, false);
-
-	document.getElementById("4s").addEventListener("click", function() {
-	usr_model = "4s";
-	highlightList("4s", "list-group-item");
-	checkSizes("4s");
-	checkColors("4s");
-	}, false);
-
-	document.getElementById("5").addEventListener("click", function() {
-	usr_model = "5";
-	highlightList("5", "list-group-item");
-	checkSizes("5");
-	checkColors("5");
-	}, false);
-
-	document.getElementById("5c").addEventListener("click", function() {
-	usr_model = "5c";
-	highlightList("5c", "list-group-item");
-	checkSizes("5c");
-	checkColors("5c");
-	}, false);
-
-	document.getElementById("5s").addEventListener("click", function() {
-	usr_model = "5s";
-	highlightList("5s", "list-group-item");
-	checkSizes("5s");
-	checkColors("5s");
-	}, false);
-
-	document.getElementById("6").addEventListener("click", function() {
-	usr_model = "6";
-	highlightList("6", "list-group-item");
-	checkSizes("6");
-	checkColors("6");
-	}, false);
-
-	document.getElementById("6plus").addEventListener("click", function() {
-	usr_model = "6plus";
-	highlightList("6plus", "list-group-item");
-	checkSizes("6plus");
-	checkColors("6plus");
-	}, false);
-
-
-	// --------- Carriers
-
-	document.getElementById("sprint").addEventListener("click", function() {
-	usr_carrier = "sprint";
-	highlightList("sprint", "list-group-item");
-	}, false);
-
-	document.getElementById("tmobile").addEventListener("click", function() {
-	usr_carrier = "tmobile";
-	highlightList("tmobile", "list-group-item");
-	}, false);
-
-	document.getElementById("verizon").addEventListener("click", function() {
-	usr_carrier = "verizon";
-	highlightList("verizon", "list-group-item");
-	}, false);
-
-	document.getElementById("att").addEventListener("click", function() {
-	usr_carrier = "att";
-	highlightList("att", "list-group-item");
-	}, false);
-
-	document.getElementById("unlocked").addEventListener("click", function() {
-	usr_carrier = "unlocked";
-	highlightList("unlocked", "list-group-item");
-	}, false);
-
-
-	// --------- Storage Sizes
-
-	document.getElementById("8gb").addEventListener("click", function() {
-	usr_storage = "8gb";
-	highlightList("8gb", "list-group-item");
-	}, false);
-
-	document.getElementById("16gb").addEventListener("click", function() {
-	usr_storage = "16gb";
-	highlightList("16gb", "list-group-item");
-	}, false);
-
-	document.getElementById("32gb").addEventListener("click", function() {
-	usr_storage = "32gb";
-	highlightList("32gb", "list-group-item");
-	}, false);
-
-	document.getElementById("64gb").addEventListener("click", function() {
-	usr_storage = "64gb";
-	highlightList("64gb", "list-group-item");
-	}, false);
-
-	document.getElementById("128gb").addEventListener("click", function() {
-	usr_storage = "128gb";
-	highlightList("128gb", "list-group-item");
-	}, false);
-
-
-	// --------- Colors
-
-	document.getElementById("BLACK").addEventListener("click", function() {
-	usr_color = "BLACK";
-	highlightList("BLACK", "list-group-item");
-	}, false);
-
-	document.getElementById("WHITE").addEventListener("click", function() {
-	usr_color = "WHITE";
-	highlightList("WHITE", "list-group-item");
-	}, false);
-
-	document.getElementById("SLATE").addEventListener("click", function() {
-	usr_color = "SLATE";
-	highlightList("SLATE", "list-group-item");
-	}, false);
-
-	document.getElementById("PINK").addEventListener("click", function() {
-	usr_color = "PINK";
-	highlightList("PINK", "list-group-item");
-	}, false);
-
-	document.getElementById("YELLOW").addEventListener("click", function() {
-	usr_color = "YELLOW";
-	highlightList("YELLOW", "list-group-item");
-	}, false);
-
-	document.getElementById("BLUE").addEventListener("click", function() {
-	usr_color = "BLUE";
-	highlightList("BLUE", "list-group-item");
-	}, false);
-
-	document.getElementById("RED").addEventListener("click", function() {
-	usr_color = "RED";
-	highlightList("RED", "list-group-item");
-	}, false);
-
-	document.getElementById("GRAY").addEventListener("click", function() {
-	usr_color = "GRAY";
-	highlightList("GRAY", "list-group-item");
-	}, false);
-
-	document.getElementById("SILVER").addEventListener("click", function() {
-	usr_color = "SILVER";
-	highlightList("SILVER", "list-group-item");
-	}, false);
-
-	document.getElementById("SPACE").addEventListener("click", function() {
-	usr_color = "SPACE";
-	highlightList("SPACE", "list-group-item");
-	}, false);
-
-	document.getElementById("GOLD").addEventListener("click", function() {
-	usr_color = "GOLD";
-	highlightList("GOLD", "list-group-item");
-	}, false);
-
-	document.getElementById("PINK").addEventListener("click", function() {
-	usr_color = "PINK";
-	highlightList("PINK", "list-group-item");
-	}, false);
-
-	document.getElementById("GREEN").addEventListener("click", function() {
-	usr_color = "GREEN";
-	highlightList("GREEN", "list-group-item");
-	}, false);
-
-	function startPython() {
-		// hide all menu
-
-		// show loading bar
-
-		// run script
-
-		// display xml stylized results
-	}
-
-	function getStarted() {
-		document.getElementById("intro").className = "hidden";
-		document.getElementById("daButton").className = "hidden";
-
-		showList(list_status[list_num]);
-	}
-
-	function showList(list) {
-		var element = document.getElementById(list);
-		element.className = "row";
-
-	}
-
-	function hideList(list) {
-		var element = document.getElementById(list);
-		element.className = "row hidden";
-	}
-
-	function updateUserInput(input) {
-		document.getElementById("carrier").value = usr_carrier;
-		document.getElementById("model").value = usr_model;
-		document.getElementById("storage").value = usr_storage;
-		document.getElementById("color").value = usr_color;
-	}
-
-	function highlightList(id, aClass) {
-		var element = document.getElementById(id);
-		element.className = aClass.concat(" active");
-
-		hideList(list_status[list_num]);
-		list_num++;
-		showList(list_status[list_num]);
-
-		updateUserInput(list_num);
-
-		if (list_num == 4) {
-			startPython();
-		}
-	}
-
-	function displaySize(sizes) {
-		for(var x = 0; x<sizes.length; x++) {
-			var element = document.getElementById(sizes[x]);
-			element.className = "list-group-item";
-		}
-	}
-
-	function displayColor(colors) {
-		for(var x = 0; x<colors.length; x++) {
-			var element = document.getElementById(colors[x]);
-			element.className = "list-group-item";
-		}
-	}
-
-	function checkSizes(model) {
-		switch(model) {
-			case "4":
-				displaySize(["8gb","16gb", "32gb"]);
-				break;
-			case "4s":
-				displaySize(["8gb","16gb", "32gb", "64gb"]);
-				break;
-			case "5":
-				displaySize(["16gb","32gb", "64gb"]);
-				break;
-			case "5c":
-				displaySize(["8gb","16gb", "32gb"]);
-				break;
-			case "5s":
-				displaySize(["16gb","32gb", "64gb"]);
-				break;
-			case "6":
-				displaySize(["16gb","64gb", "128gb"]);
-				break;
-			case "6plus":
-				displaySize(["16gb","64gb", "128gb"]);
-				break;
-			default:
-				break;
-		}
-	}
-
-	function checkColors(model) {
-		switch(model) {
-			case "4":
-				displayColor(["BLACK","WHITE"]);
-				break;
-			case "4s":
-				displayColor(["BLACK","WHITE"]);
-				break;
-			case "5":
-				displayColor(["BLACK", "SLATE","WHITE","PINK","YELLOW","BLUE","RED","GRAY"]);
-				break;
-			case "5c":
-				displayColor(["WHITE","PINK","YELLOW","BLUE","GREEN"]);
-				break;
-			case "5s":
-				displayColor(["SILVER","SPACE","GOLD","GRAY"]);
-				break;
-			case "6":
-				displayColor(["SILVER","SPACE","GOLD","GRAY"]);
-				break;
-			case "6plus":
-				displayColor(["SILVER","SPACE","GOLD","GRAY"]);
-				break;
-			default:
-				break;
-		}
-	}
-
-	</script>
-    </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/docs.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+    <script src="jquery.js"></script>
+
+    <link rel="stylesheet" href="./jqueryUI/jquery-ui.css">
+    <script src="./jqueryUI/jquery-ui.js"></script>
+
+    <!-- The jQuery library is a prerequisite for all jqSuite products -->
+    <script type="text/ecmascript" src="./jqgrid/js/jquery-1.11.0.min.js"></script>
+    <!-- This is the Javascript file of jqGrid -->
+    <script type="text/ecmascript" src="./jqgrid/js/jquery.jqGrid.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="./jqgrid/css/jquery-ui.css" />
+    <!-- The link to the CSS that the grid needs -->
+    <link rel="stylesheet" type="text/css" media="screen" href="./jqgrid/css/ui.jqgrid.css" />
+    <script type="text/javascript" src="./jqgrid/js/i18n/grid.locale-en.js"></script>
+    <meta charset="utf-8" />
+
+    <title>Crimson Bids</title>
+</head>
+
+<body>
+
+    <div style="position: relative; left: 71%; top:115px">
+        <a href="./about.html"> About</a> /
+        <a href="./faq.html"> FAQ </a> /
+        <a href="./feedback.html"> Send us your feedback </a>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <a href="index.html"><img src="./logo.jpg" ><br></a>
+            <h4>Quality Product Listings</h4></div>
+        <div class="panel panel-default" >
+            <div class="panel-body">
+                <h3><span id="model_selection">iPhone 6+ listings</span></h3>
+            
+            <label for="model">Model:</label>
+            <select name="model" id="model">
+                <option id="iphone6p">iPhone 6+</option>
+                <option id="iphone6">iPhone 6</option>
+                <option id="iphone5s">iPhone 5S</option>
+                <option id="iphone5c">iPhone 5C</option>
+                <option id="iphone5">iPhone 5</option>
+                <option id="iphone4s">iPhone 4S</option>
+                <option id="iphone4">iPhone 4</option>
+            </select><br>
+            
+            <label for="status">Select status</label>
+            <select name="status" id="status">
+                <option id="any">--Select status--</option>
+                <option id="like-new">Like New</option>
+                <option id="for-parts">For parts or repair</option>
+            </select><br>                
+
+            <!--<label for="esn">Select ESN:</label>
+            <select name="esn" id="esn">
+                <option id="esn_any">-- Select ESN --</option>
+                <option id="esn_unlocked">Unlocked</option>
+                <option id="esn_locked">Locked</option>
+            </select><br>
+                
+            <label for="icloud">Select iCloud:</label>
+            <select name="icloud" id="icloud">
+                <option id="icloud_any">-- Select iCloud --</option>
+                <option id="icloud_unlocked">Unlocked</option>
+                <option id="icloud_locked">Locked</option>
+            </select><br>
+                
+            <label for="imei">Select IMEI:</label>
+            <select name="imei" id="imei">
+                <option id="imei_any">-- Select IMEI --</option>
+                <option id="imei_unlocked">Unlocked</option>
+                <option id="imei_locked">Locked</option>
+            </select><br>
+                
+            <label for="accessories">Accessories:</label>
+            <div name="accessories" id="accessories">
+                <input type="checkbox" value="charger"> Charger<br>
+                <input type="checkbox" value="box"> Original box<br>
+                <input type="checkbox" value="screenprotector"> Screen protector<br>
+                <input type="checkbox" value="headphones"> Headphones<br>
+                <input type="checkbox" value="cable"> Cable<br>
+            </div>-->
+        </div>
+    </div>
+
+    <table id="jqGrid"></table>
+    <div id="jqGridPager"></div>
+    Listings last updated <span id="lastUpdated"></span> minutes ago
+
+    <script type="text/javascript">
+
+        $(document).ready(loadData('./cgi-bin/iphone6p.json'));
+        setTimeout(checkParseResults, 10);
+        $("#model").on('change', updateModel);
+        $("#status").on('change', updateStatus);
+
+
+         function aa() {
+            window.open("http://jsbin.com/agimor");
+            window.focus();
+          }
+
+         function bb() {
+            $.ajax({
+              type: "POST",
+              url: "./cgi-bin/constructURL.py",
+              data: { param: text}
+            }).done(function( o ) {
+               // do something
+            });
+         }
+
+        function updateStatus() {
+            var searchString = $('#status').find('option:selected').attr('id');
+
+            if(searchString == "any") {
+                searchString = '-'
+            }
+
+            var f = { groupOp: "OR", rules: [] };
+
+            f.rules.push({ field: "pmresult", op: "cn", data: searchString });
+
+            var grid = $('#jqGrid');
+            grid[0].p.search = f.rules.length > 0;
+            $.extend(grid[0].p.postData, { filters: JSON.stringify(f) });
+            grid.trigger("reloadGrid", [{ page: 1 }]);
+
+        }
+
+        function updateModel() {
+            $('#status').prop('selectedIndex',0);
+            jsonf = './cgi-bin/' + $("#model").find('option:selected').attr('id') + '.json';
+
+            document.getElementById("model_selection").innerHTML = $("#model").find('option:selected').val()+" listings";
+
+            $("#jqGrid").setGridParam({
+                url: jsonf,
+                datatype: 'json',
+                page: 1
+            }).trigger('reloadGrid');
+
+        }
+
+        function checkParseResults() {
+            var d = new Date();
+            var n = d.getMinutes();
+
+            document.getElementById("lastUpdated").innerHTML = n % 10;
+
+            setTimeout(checkParseResults, 1000);
+        }
+
+        function loadData(jsonFile) {
+
+            $("#jqGrid").jqGrid({
+                url: jsonFile,
+                datatype: "json",
+                colModel: [{
+                    label: 'Item ID',
+                    index: 'itemId',
+                    name: 'itemId',
+                    width: 150
+                }, {
+                    label: 'Carrier',
+                    name: 'carrier',
+                    width: 100
+                }, {
+                    label: 'Storage',
+                    name: 'storage',
+                    width: 100
+                }, {
+                    label: 'Color',
+                    name: 'color',
+                    width: 100
+                }, {
+                    label: 'Current price',
+                    name: 'currentPrice',
+                    width: 100
+                }, {
+                    label: 'Time left',
+                    index: 'timeLeft',
+                    name: 'timeLeft',
+                    width: 100,
+                    sorttype: function(cell, obj) {
+                        return obj.timeLeft;
+                    },
+                    formatter: secToTimeLeft
+                }, {
+                    label: 'Bids',
+                    name: 'bidCount',
+                    width: 50
+                }, {
+                    label: 'Listing type',
+                    name: 'listingType',
+                    width: 150,
+                    formatter: convertListingType
+                }, {
+                    label: 'Condition',
+                    name: 'conditionId',
+                    width: 150
+                },{
+                    label: 'Status',
+                    name: 'pmresult',
+                    width: 150
+                },{
+                    label: 'Item info',
+                    name: 'bidnow',
+                    width: 100
+                }, ],
+                viewrecords: true, // show the current page, data rang and total records on the toolbar
+                width: 1000,
+                height: 500,
+                rowNum: 100,
+                loadonce: true,
+                scroll: 1, // set the scroll property to 1 to enable paging with scrollbar - virtual loading of records
+                emptyrecords: 'Scroll to bottom to retrieve new page', // the message will be displayed at the bottom 
+                pager: "#jqGridPager"
+            });
+
+            function secToTimeLeft(cellvalue, options, rowObject) {
+                diff = parseFloat(cellvalue);
+                // Currently rounding down
+                if (diff / 3600 < 1)
+                    return String(Math.floor(diff / 60, 1)) + ' Minutes';
+                else if (diff / 3600 < 24)
+                    return String(Math.floor(diff / 3600, 1)) + ' Hours';
+                else if (diff / 3600 / 24 >= 3)
+                    return '3+ Days'
+                else
+                    return String(Math.floor(diff / 3600 / 24, 1)) + ' Days';
+            }
+
+            function convertListingType(cellvalue, options, rowObject) {
+                if(cellvalue == "StoreInventory")
+                    return "Fixed Price";
+                if(cellvalue == "AuctionWithBIN")
+                    return "Auction";
+                if(cellvalue == "FixedPrice") 
+                    return "Fixed Price";
+                return cellvalue;
+            }
+        }
+
+    </script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-62663706-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+        
+</body>
+
 </html>

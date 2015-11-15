@@ -38,6 +38,9 @@ class iPhone:
         return 'STORAGE-DNE'
 
     def getModel(self, title):
+        if 'PLUS' in title: # hacking 6plus to work...
+            return '6PLUS'
+
         for word in title:
             for model in self.model:
                 if word == model:

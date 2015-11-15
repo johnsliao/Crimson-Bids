@@ -4,7 +4,8 @@ import requests
 
 class Construct_URL():
     def __init__(self):
-        self.MY_APP_ID = 'JohnLiao-6d7a-4b66-bd6a-036722db6f28'
+        #self.MY_APP_ID = 'CrimsonB-770e-4f72-969a-a59a85341b09' # Sandbox
+        self.MY_APP_ID = 'CrimsonB-2aa7-4264-8615-558696ab4616' # Production
         self.OPERATION_NAME = 'findItemsByProduct'
         self.SERVICE_VERSION = '1.0.0'
         self.RESPONSE_DATA_FORMAT = 'XML'
@@ -28,6 +29,7 @@ class Construct_URL():
 
         return address
 
+
     def single_product(self, itemId):
         url = ''
         url += 'http://open.api.ebay.com/shopping?'
@@ -36,14 +38,15 @@ class Construct_URL():
         url += 'appid=' + self.MY_APP_ID
         url += '&siteid=0&version=515'
         url += '&ItemID=' + itemId
-        url += '&IncludeSelector=TextDescription,ItemSpecifics,ConditionDescription'
+        url += '&IncludeSelector=Details,TextDescription,ItemSpecifics,ConditionDescription'
 
         return url
 
 def main():
     c = Construct_URL()
-    url = c.single_product('400850903352')
-    #url = c.iPhone_listings(1)
+    url = c.single_product('371299724415')
+    print url
+    url = c.iPhone_listings(1)
     print url
 
 if __name__ == '__main__':

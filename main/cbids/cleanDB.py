@@ -1,13 +1,14 @@
-import time
+from datetime import datetime
 
 from boto.dynamodb2.fields import HashKey, RangeKey, GlobalAllIndex
 from boto.dynamodb2.table import Table
 from boto.dynamodb2.types import NUMBER
 
 def main():
-    print 'checking endtimes...'
-
+    print 'starting cleanDB.py...'
+    
     items_table = Table('items')
+    
     usr_itemQuery = items_table.scan()
 
     for usr_item in usr_itemQuery:
@@ -16,23 +17,21 @@ def main():
         if endTime is None:
             print 'nonetype listing! deleting...'
             usr_item.delete()
-
             continue
-
+        
+        now = datetime.utcnow()
         list_date, list_time = (endTime.encode('utf-8').decode('ascii', 'ignore')).split('T')
-
         list_time = list_time.replace('.000Z','')
+        
+        together = list_date+list_time
 
-        if list_date>time.strftime("%Y/%m/%d"):
-            print 'current date is:', time.strftime("%Y/%m/%d")
-            print 'listing date is:', list_date
-            print 'expired listing by date! deleting...'
-            usr_item.delete()
-            continue
+        c_end_time = datetime.strptime(together, '%Y-%m-%d%H:%M:%S')
+        
+        diff = c_end_time - now
+        
+        diff = diff.total_seconds()
 
-        if list_time>time.strftime("%H:%M:%S"):
-            print 'current time is:', time.strftime("%H:%M:%S")
-            print 'listing time is:', list_time
+        if diff < 0:
             print 'expired listing by time! deleting...'
             usr_item.delete()
             continue
