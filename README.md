@@ -11,4 +11,4 @@ Back end:
 - Hosted on Amazon EC2, uses Amazon tools such as DynamoDB to store/update the listings.
 
 Front end:
-- Bootstrap, JQGrid, CSS, HTML, AJAX
+- Bootstrap, JQuery/JavaScript, JQGrid, CSS, HTML, AJAX, 
