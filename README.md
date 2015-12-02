@@ -1,11 +1,14 @@
-# TechGrab
+# Crimson Bids
 
-README
+Built a eBay listing scraper written in Python. Updates the listings every 10 minutes.
 
-Offers a service-based online platform that simplifies eBay's auctioning process for high-end technology products such as flagship: smart phones, tablets, and laptops.
+Some Key features
+- performs language processing each product seller descriptions listing (keywords like "cracked", "scratched", "bad IMEID". Also negations taken into account)
+- screens out poorly rated sellers (listings with sellers below 95% threshold are ignored)
 
-This service utilizes language processing to find high quality, legitimate auction products via eBay's API and seller's item description. This algorithm ranks and sorts items based on their item descriptions and seller notes.
+Back end:
+- XML/JSON navigation, Python libraries (lxml, json, requests, etc), cron, eBay API
+- Hosted on Amazon EC2, uses Amazon tools such as DynamoDB to store/update the listings.
 
-Users are able to place orders (soon!), identify how much they would be willing to pay, and select quality listings provided by the platform.
-
-This service adds value by providing customers the hassle of searching for a high-quality second hand product and the auction process.
+Front end:
+- Bootstrap, JQGrid, CSS, HTML, AJAX
